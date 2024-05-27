@@ -23,15 +23,15 @@ services:
     volumes:
       - ./docker-volumes/postgres:/var/lib/postgresql
 
-  app:
-    build:
-      context: .
-      dockerfile: /Dockerfile
-      target: development
-    command: npm run start:dev
-    env_file:
-      - /.env
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/user/src/app
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: /Dockerfile
+  #     target: development
+  #   command: npm run start:dev
+  #   env_file:
+  #     - /.env
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - .:/user/src/app
