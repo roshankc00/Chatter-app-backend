@@ -79,6 +79,7 @@ export class UsersService {
       select: {
         password: true,
         id: true,
+        name: true,
       },
     });
     if (!userexist) {
@@ -94,6 +95,7 @@ export class UsersService {
 
       return {
         id: userexist.id,
+        name: userexist.name,
       };
     }
   }

@@ -14,14 +14,20 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  signupUser(userSignupDto: CreateUserDto) {
-    return this.userService.create(userSignupDto);
+  async signupUser(userSignupDto: CreateUserDto) {
+    return {
+      user: await this.userService.create(userSignupDto),
+      success: true,
+      message: 'User Registered successfully',
+    };
   }
 
   async login(user: User, response: Response) {
     const tokenPayload = {
       userId: user.id,
+      name: user.name,
     };
+    console.log(user);
 
     const expires = new Date();
     expires.setSeconds(
@@ -39,12 +45,13 @@ export class AuthService {
       secure: true,
     });
 
-    return { token };
+    return { token, ...user };
   }
 
   handleGoogleLogin(user: User, response: Response) {
     const tokenPayload = {
       userId: user.id,
+      name: user.name,
     };
 
     const expires = new Date();

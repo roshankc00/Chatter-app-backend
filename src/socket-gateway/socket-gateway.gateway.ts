@@ -1,8 +1,17 @@
 import {
-  WebSocketGateway,
-  SubscribeMessage,
   MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
 
-@WebSocketGateway()
-export class SocketGatewayGateway {}
+@WebSocketGateway({
+  cors: '*',
+})
+export class SocketGatewayGateway {
+  @WebSocketServer() server;
+  @SubscribeMessage('send_message')
+  async create(@MessageBody() data: any) {
+    await this.server.emit('message', data);
+  }
+}
