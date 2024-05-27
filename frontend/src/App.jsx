@@ -8,7 +8,7 @@ function App() {
 
   return (
     <div>
-      <h1>Hello from ui</h1>
+      <h1 className="bg-red-500">Hello from ui</h1>
     </div>
   );
 }
