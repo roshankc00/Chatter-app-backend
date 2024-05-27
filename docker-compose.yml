@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  redis:
+    container_name: redis_container
+    image: redis:alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --loglevel warning
+    volumes:
+      - ./docker-volumes/cache:/data
+
+  postgres:
+    container_name: postgreswow_container
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=task-chatter
+      - POSTGRES_PASSWORD=task-chatter
+      - POSTGRES_DB=task-chatter
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./docker-volumes/postgres:/var/lib/postgresql
+
+  app:
+    build:
+      context: .
+      dockerfile: /Dockerfile
+      target: development
+    command: npm run start:dev
+    env_file:
+      - /.env
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/user/src/app
