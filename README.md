@@ -4,9 +4,11 @@
 
 ## Postgres->typeorm
 
+## Socket.io
+
 ## Redis(pubsub)
 
-## React(Just to fell the backend with no intension in making ui attractive)
+## React(Just to fell the backend with no intension of making ui attractive)
 
 #Core Features:
 
