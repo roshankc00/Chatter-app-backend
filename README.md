@@ -1,6 +1,6 @@
 # Tech stack
 
-- Nestjs
+- Nestjs(Nodejs framework for building server-side applications)
 
 - Postgres->typeorm
 
