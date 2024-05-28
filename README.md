@@ -1,14 +1,25 @@
 # Tech stack
 
-## Nestjs
+- Nestjs
 
-## Postgres->typeorm
+- Postgres->typeorm
 
-## Socket.io
+- Socket.io
 
-## Redis(pubsub)
+- Redis(pubsub)
 
-## React(Just to fell the backend with no intension of making ui attractive)
+- typescript
+
+- React(Just to fell the backend with no intension of making ui attractive)
+
+### Users Feature
+
+- Authentication
+- Google Authentication
+- Chat each other
+- Logout manage profiles
+- Real time Chat
+- Vdo call chat (UDP)
 
 # Chat demo View Demo
 
@@ -18,7 +29,7 @@ https://res.cloudinary.com/dijim5bls/video/upload/v1716909576/WhatsApp_Video_202
 
 # stream demo
 
-## somehow not able to show the remoteStream in ui but the goal was connecting the remote and my stream which was achieved
+### somehow not able to show the remoteStream in ui but the goal was connecting the remote and my stream which was achieved
 
 <p align="center">
   <img src="./Screenshot 2024-05-28 214124.png" width="400" alt="accessibility text">
