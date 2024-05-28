@@ -12,10 +12,7 @@
 
 # Demo
 
-<video width="320" height="240" controls>
-  <source src="/WhatsApp Video 2024-05-28 at 20.51.24_dc4fd6e2.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+  <video src="/WhatsApp Video 2024-05-28 at 20.51.24_dc4fd6e2.mp4" type="video/mp4">
 
 #Core Features:
 
