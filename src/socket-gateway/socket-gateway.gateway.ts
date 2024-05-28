@@ -54,26 +54,6 @@ export class SocketGatewayGateway
         .to(`chat-${chatId}`)
         .emit('user_leave', { chatId, id: socketId });
     });
-
-    this.pubSub.onMessage('user_call', (message: string) => {
-      const { offer, from, to } = JSON.parse(message);
-      this.server.to(to).emit('incoming_call', { from, offer });
-    });
-
-    this.pubSub.onMessage('call_accepted', (message: string) => {
-      const { ans, from, to } = JSON.parse(message);
-      this.server.to(to).emit('call_accepted', { from, ans });
-    });
-
-    this.pubSub.onMessage('peer_nego_needed', (message: string) => {
-      const { offer, from, to } = JSON.parse(message);
-      this.server.to(to).emit('peer_nego_needed', { from, offer });
-    });
-
-    this.pubSub.onMessage('peer_nego_done', (message: string) => {
-      const { ans, from, to } = JSON.parse(message);
-      this.server.to(to).emit('peer_nego_done', { from, ans });
-    });
   }
 
   handleConnection(client: Socket, ...args: any[]) {}

@@ -22,6 +22,10 @@ https://res.cloudinary.com/dijim5bls/video/upload/v1716909576/WhatsApp_Video_202
   <img src="./Screenshot 2024-05-28 214124.png" width="400" alt="accessibility text">
 </p>
 
+# Chat Architecture
+
+https://medium.com/@rohitkc8848/how-i-scaled-web-socket-server-fa8faa8f89ad
+
 #Core Features:
 
 1. REST API for User Management

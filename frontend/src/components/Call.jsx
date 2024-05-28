@@ -14,7 +14,7 @@ const CallMe = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [typing, setTyping] = useState(false); // New state for typing indicator
-  const { userId, name } = useSelector((state) => state.auth);
+  const { userId, name, token } = useSelector((state) => state.auth);
   const handleCallUser = useCallback(async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
@@ -136,7 +136,11 @@ const CallMe = () => {
   }, []);
 
   const getAllMessages = async () => {
-    const data = await axios.get(`http://localhost:3002/chats/1`);
+    const data = await axios.get(`http://localhost:3002/chats/1`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(data?.data?.messages);
     const newData = data?.data?.messages?.map((item) => ({
       name: item.user.name,
