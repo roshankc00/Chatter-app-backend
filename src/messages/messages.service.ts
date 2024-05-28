@@ -13,11 +13,12 @@ export class MessagesService {
     private readonly messageRepository: Repository<Message>,
     private readonly entityManager: EntityManager,
   ) {}
-  create(createMessageDto: CreateMessageDto, user: User) {
-    const { chatId, content } = createMessageDto;
+  create(createMessageDto: CreateMessageDto) {
+    const { chatId, content, userId } = createMessageDto;
     const message = new Message({
       chatId,
       content,
+      userId,
     });
     return this.entityManager.save(message);
   }

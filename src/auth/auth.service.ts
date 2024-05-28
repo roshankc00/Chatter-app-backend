@@ -27,7 +27,6 @@ export class AuthService {
       userId: user.id,
       name: user.name,
     };
-    console.log(user);
 
     const expires = new Date();
     expires.setSeconds(

@@ -44,8 +44,8 @@ export class UsersService {
 
   async remove(id: number) {
     const user = await this.existUser(id);
-    user.isActive = false;
-    return this.usersRepository.save(user);
+    // user.isActive = false;
+    return this.usersRepository.remove(user);
   }
 
   private async existUser(id: number) {
@@ -98,5 +98,12 @@ export class UsersService {
         name: userexist.name,
       };
     }
+  }
+
+  async findByIds(userIds: number[]): Promise<User[]> {
+    const users = await Promise.all(
+      userIds.map((id) => this.usersRepository.findOne({ where: { id } })),
+    );
+    return users.filter((user) => user !== undefined) as User[];
   }
 }
