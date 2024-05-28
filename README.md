@@ -24,7 +24,7 @@
 # Chat Architecture(medium link)
 
 ```bash
-$ https://medium.com/@rohitkc8848/how-i-scaled-web-socket-server-fa8faa8f89ad
+https://medium.com/@rohitkc8848/how-i-scaled-web-socket-server-fa8faa8f89ad
 ```
 
 # Chat demo View Demo
