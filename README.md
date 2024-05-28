@@ -10,9 +10,17 @@
 
 ## React(Just to fell the backend with no intension of making ui attractive)
 
-# View Demo
+# Chat demo View Demo
 
 https://res.cloudinary.com/dijim5bls/video/upload/v1716909576/WhatsApp_Video_2024-05-28_at_20.51.24_dc4fd6e2_gk9gka.mp4
+
+# stream demo
+
+## somehow not able to show the remoteStream in ui but the goal was donr successfully connected my stream and remote stream
+
+<p align="center">
+  <img src="./Screenshot 2024-05-28 214124.png" width="400" alt="accessibility text">
+</p>
 
 #Core Features:
 

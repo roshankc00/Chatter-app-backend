@@ -15,7 +15,6 @@ const CallMe = () => {
   const [message, setMessage] = useState('');
   const [typing, setTyping] = useState(false); // New state for typing indicator
   const { userId, name } = useSelector((state) => state.auth);
-
   const handleCallUser = useCallback(async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
@@ -24,22 +23,24 @@ const CallMe = () => {
     const offer = await peer.getOffer();
     socket.emit('user_call', { to: remoteSocketId, offer });
     setMyStream(stream);
-  }, [remoteSocketId]);
+  }, [remoteSocketId, socket]);
 
   const handleUserJoined = useCallback((data) => {
-    setRemoteSocketId(data.id);
+    setRemoteSocketId(data?.id);
   }, []);
-
-  const handleIncomingCall = useCallback(async ({ from, offer }) => {
-    setRemoteSocketId(from);
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
-    });
-    setMyStream(stream);
-    const ans = await peer.getAnswer(offer);
-    socket.emit('call_accepted', { to: from, ans });
-  }, []);
+  const handleIncommingCall = useCallback(
+    async ({ from, offer }) => {
+      setRemoteSocketId(from);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
+      });
+      setMyStream(stream);
+      const ans = await peer.getAnswer(offer);
+      socket.emit('call_accepted', { to: from, ans });
+    },
+    [socket],
+  );
 
   const sendStreams = useCallback(() => {
     for (const track of myStream.getTracks()) {
@@ -58,7 +59,7 @@ const CallMe = () => {
   const handleNegoNeeded = useCallback(async () => {
     const offer = await peer.getOffer();
     socket.emit('peer_nego_needed', { offer, to: remoteSocketId });
-  }, [remoteSocketId]);
+  }, [remoteSocketId, socket]);
 
   useEffect(() => {
     peer.peer.addEventListener('negotiationneeded', handleNegoNeeded);
@@ -67,13 +68,23 @@ const CallMe = () => {
     };
   }, [handleNegoNeeded]);
 
-  const handleNegoNeedIncoming = useCallback(async ({ from, offer }) => {
-    const ans = await peer.getAnswer(offer);
-    socket.emit('peer_nego_done', { to: from, ans });
-  }, []);
+  const handleNegoNeedIncomming = useCallback(
+    async ({ from, offer }) => {
+      const ans = await peer.getAnswer(offer);
+      socket.emit('peer_nego_done', { to: from, ans });
+    },
+    [socket],
+  );
 
   const handleNegoNeedFinal = useCallback(async ({ ans }) => {
     await peer.setLocalDescription(ans);
+  }, []);
+
+  useEffect(() => {
+    peer.peer.addEventListener('track', async (ev) => {
+      const remoteStream = ev.streams;
+      setRemoteStream(remoteStream[0]);
+    });
   }, []);
 
   const handleSendMessage = useCallback(() => {
@@ -87,31 +98,35 @@ const CallMe = () => {
 
   useEffect(() => {
     peer.peer.addEventListener('track', async (ev) => {
+      console.log(ev.streams);
       const remoteStream = ev.streams;
       setRemoteStream(remoteStream[0]);
     });
   }, []);
 
+  console.log(myStream, ',my');
+  console.log(remoteStream, ',remote');
+
   useEffect(() => {
     socket.on('user_joined', handleUserJoined);
-    socket.on('incoming_call', handleIncomingCall);
+    socket.on('incomming_call', handleIncommingCall);
     socket.on('call_accepted', handleCallAccepted);
-    socket.on('peer_nego_needed', handleNegoNeedIncoming);
-    socket.on('peer_nego_done', handleNegoNeedFinal);
+    socket.on('peer_nego_needed', handleNegoNeedIncomming);
+    socket.on('peer_nego_final', handleNegoNeedFinal);
     socket.on('messages', handleNewMessage);
     return () => {
       socket.off('user_joined', handleUserJoined);
-      socket.off('incoming_call', handleIncomingCall);
+      socket.off('incomming_call', handleIncommingCall);
       socket.off('call_accepted', handleCallAccepted);
-      socket.off('peer_nego_needed', handleNegoNeedIncoming);
-      socket.off('peer_nego_done', handleNegoNeedFinal);
+      socket.off('peer_nego_needed', handleNegoNeedIncomming);
+      socket.off('peer_nego_final', handleNegoNeedFinal);
       socket.off('messages', handleNewMessage);
     };
   }, [
     handleUserJoined,
-    handleIncomingCall,
+    handleIncommingCall,
     handleCallAccepted,
-    handleNegoNeedIncoming,
+    handleNegoNeeded,
     handleNegoNeedFinal,
     handleNewMessage,
   ]);
@@ -198,7 +213,6 @@ const CallMe = () => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleTyping} // Trigger typing indicator on key press
         />
-        {console.log(typing)}
         <button onClick={handleSendMessage}>Send Message</button>
         {typing && <p>Typing...</p>} {/* Display typing indicator */}
       </div>

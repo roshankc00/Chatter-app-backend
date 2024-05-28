@@ -96,11 +96,11 @@ export class SocketGatewayGateway
     @MessageBody() { chatId }: { chatId: number },
     @ConnectedSocket() socket: Socket,
   ) {
+    socket.leave(`chat-${chatId}`);
     await this.pubSub.publish(
       'chat_leave',
       JSON.stringify({ chatId, socketId: socket.id }),
     );
-    socket.leave(`chat-${chatId}`);
   }
 
   @SubscribeMessage('start_typing')
@@ -149,6 +149,7 @@ export class SocketGatewayGateway
     });
     console.log(me);
   }
+
   @SubscribeMessage('user_call')
   handleUserCall(
     @MessageBody() { offer, to }: { to: string; offer: any },
