@@ -12,7 +12,11 @@
 
 # Demo
 
-  <video src="/WhatsApp Video 2024-05-28 at 20.51.24_dc4fd6e2.mp4" type="video/mp4">
+<video width="640" height="360" controls>
+
+  <source src="https://res.cloudinary.com/dijim5bls/video/upload/v1716909576/WhatsApp_Video_2024-05-28_at_20.51.24_dc4fd6e2_gk9gka.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 #Core Features:
 
