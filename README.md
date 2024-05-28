@@ -12,11 +12,13 @@
 
 # Chat demo View Demo
 
+```bash
 https://res.cloudinary.com/dijim5bls/video/upload/v1716909576/WhatsApp_Video_2024-05-28_at_20.51.24_dc4fd6e2_gk9gka.mp4
+```
 
 # stream demo
 
-## somehow not able to show the remoteStream in ui but the goal was donr successfully connected my stream and remote stream
+## somehow not able to show the remoteStream in ui but the goal was connecting the remote and my stream which was achieved
 
 <p align="center">
   <img src="./Screenshot 2024-05-28 214124.png" width="400" alt="accessibility text">
@@ -48,3 +50,53 @@ https://medium.com/@rohitkc8848/how-i-scaled-web-socket-server-fa8faa8f89ad
 - Your code should follow MVC architecture and best practices for node development.
 - The application must be secure, with proper authentication and authorization checks for the API and chat features.
 - Provide clear documentation on how to set up and run your project, including any environment setup and external dependencies.
+
+## Installation
+
+```bash
+$ set up all the env env temp is available in .env.example
+```
+
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).

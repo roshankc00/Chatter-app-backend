@@ -8,7 +8,7 @@ import { join } from 'path';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { ConfigService } from '@nestjs/config';
-
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(cookieParser());
@@ -27,6 +27,22 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
+  const config = new DocumentBuilder()
+    .setTitle('Chat app')
+    .setDescription('This is the Chatter backend ')
+    .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      description: 'Enter the Bearer token',
+      in: 'header',
+    })
+
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

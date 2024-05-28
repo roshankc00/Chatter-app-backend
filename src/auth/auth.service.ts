@@ -66,4 +66,7 @@ export class AuthService {
 
     return response.redirect(`${this.configService.get('CLIENT_URL')}`);
   }
+
+
+  
 }

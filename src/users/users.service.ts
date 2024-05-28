@@ -105,4 +105,13 @@ export class UsersService {
     );
     return users.filter((user) => user !== undefined) as User[];
   }
+
+  async addOrUpdateProfile(user: User, file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('File field is required');
+    }
+    user.profileImage = file.filename;
+
+    return this.entityManager.save(user);
+  }
 }

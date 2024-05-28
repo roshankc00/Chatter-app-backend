@@ -20,6 +20,9 @@ export class User extends AbstractEntity<User> {
   @ManyToMany(() => Chat, (chat) => chat.users)
   chats: Chat[];
 
-  @Column({ default: false })
+  @Column({ default: true })
   isActive: boolean;
+
+  @Column({ nullable: true })
+  profileImage: string;
 }
