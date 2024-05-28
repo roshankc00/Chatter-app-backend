@@ -20,7 +20,7 @@ export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
   @Post()
-  @UseGuards(JWtAuthGuard)
+  // @UseGuards(JWtAuthGuard)
   create(@Body() createMessageDto: CreateMessageDto) {
     return this.messagesService.create(createMessageDto);
   }

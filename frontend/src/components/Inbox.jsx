@@ -4,9 +4,9 @@ import { getData } from '../services/axios';
 import Navbar from './Navbar';
 import { gemRoomName } from '../../roomgen';
 import axios from 'axios';
-import { io } from 'socket.io-client';
 import ReactPlayer from 'react-player';
 import peer from '../peer';
+import { io } from 'socket.io-client';
 const socket = io('http://localhost:3002');
 const Inbox = () => {
   const { userId, name } = useSelector((state) => state.auth);

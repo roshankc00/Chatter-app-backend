@@ -10,6 +10,13 @@
 
 ## React(Just to fell the backend with no intension of making ui attractive)
 
+# Demo
+
+<video width="320" height="240" controls>
+  <source src="/WhatsApp Video 2024-05-28 at 20.51.24_dc4fd6e2.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 #Core Features:
 
 1. REST API for User Management

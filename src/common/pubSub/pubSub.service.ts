@@ -18,6 +18,13 @@ export class RedisPubSubService {
     });
 
     this.subscriber.subscribe('chat_messages');
+    this.subscriber.subscribe('chat_typing');
+    this.subscriber.subscribe('chat_join');
+    this.subscriber.subscribe('chat_leave');
+    this.subscriber.subscribe('user_call');
+    this.subscriber.subscribe('call_accepted');
+    this.subscriber.subscribe('peer_nego_needed');
+    this.subscriber.subscribe('peer_nego_done');
   }
 
   async publish(channel: string, message: string): Promise<void> {

@@ -22,22 +22,30 @@ export class ChatsService {
     });
     return this.entityManager.save(chat);
   }
-  findAll() {
+  async findAll() {
     return this.chatRepository.find({
-      relations: {
-        messages: true,
-        users: true,
+      relations: ['messages', 'messages.user'],
+      select: {
+        messages: {
+          user: {
+            name: true,
+          },
+          content: true,
+          chatId: true,
+        },
       },
+      order: {},
     });
   }
-  findOne(id: number) {
-    return this.chatRepository.findOne({
-      where: { id },
-      relations: {
-        messages: true,
-        users: true,
-      },
-    });
+  async findOne(id: number) {
+    const queryBuilder = this.chatRepository
+      .createQueryBuilder('chat')
+      .leftJoinAndSelect('chat.messages', 'messages')
+      .leftJoinAndSelect('messages.user', 'user')
+      .where('chat.id = :id', { id })
+      .orderBy('messages.createdAt', 'ASC');
+
+    return queryBuilder.getOne();
   }
   update(id: number, updateChatDto: UpdateChatDto) {
     return `This action updates a #${id} chat`;
