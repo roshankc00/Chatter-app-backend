@@ -118,12 +118,11 @@ export class SocketGatewayGateway
       'chat_messages',
       JSON.stringify({ chatId, content, userId, name }),
     );
-    const me = await this.messageService.create({
+    await this.messageService.create({
       chatId,
       content,
       userId,
     });
-    console.log(me);
   }
 
   @SubscribeMessage('user_call')
