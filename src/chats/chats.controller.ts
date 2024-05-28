@@ -8,14 +8,14 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}
 
-  @Post()
+  @Get()
   @UseGuards(JWtAuthGuard)
-  post() {
+  getAllChats() {
     return this.chatsService.findAll();
   }
 
   @ApiOperation({
-    summary: 'Gell all the chats ',
+    summary: 'Get all the chats ',
   })
   @ApiResponse({
     status: 200,
@@ -29,7 +29,7 @@ export class ChatsController {
   }
 
   @ApiOperation({
-    summary: 'Gell single chat ',
+    summary: 'Get single chat ',
   })
   @ApiResponse({
     status: 200,

@@ -3,23 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseGuards,
   Res,
-  Req,
   HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { User } from 'src/users/entities/user.entity';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 import { JWtAuthGuard } from './guards/jwt.auth.guard';
-import { join } from 'path';
-
-import { readFileSync } from 'fs';
 import { GoogleAuthGuard } from './guards/google.auth.guard';
 import { ConfigService } from '@nestjs/config';
 import { Currentuser } from 'src/common/decorators/getCurrentUser.decorator';
@@ -29,10 +22,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
   @Post('signup')
   @ApiOperation({
     summary: 'Register the user ',

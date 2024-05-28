@@ -9,14 +9,12 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { RedisPubSubService } from 'src/common/pubSub/pubSub.service';
 import { MessagesService } from 'src/messages/messages.service';
 import { JoinRoomDto } from './dtos/join.room.dto';
 import { LeaveRoomDto } from './dtos/leaveRoom';
 import { UserMessageDto } from './dtos/user.message.dto';
 
-@ApiTags('SocketGateway')
 @WebSocketGateway({
   cors: '*',
 })
@@ -24,26 +22,49 @@ export class SocketGatewayGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer() server: Server;
-
   constructor(
     private readonly messageService: MessagesService,
     private readonly pubSub: RedisPubSubService,
   ) {}
 
   onModuleInit() {
-    // Initialization logic with Redis PubSub
+    this.pubSub.onMessage('chat_messages', (message: string) => {
+      const { chatId, content, userId, name } = JSON.parse(message);
+      this.server
+        .to(`chat-${chatId}`)
+        .emit('messages', { chatId, content, userId, name });
+    });
+
+    this.pubSub.onMessage('chat_typing', (message: string) => {
+      const { chatId, typing, name, userId } = JSON.parse(message);
+      this.server
+        .to(`chat-${chatId}`)
+        .emit('chat_typing', { typing, chatId, name, userId });
+    });
+
+    this.pubSub.onMessage('chat_join', (message: string) => {
+      const { chatId, socketId } = JSON.parse(message);
+      this.server
+        .to(`chat-${chatId}`)
+        .emit('user_joined', { chatId, id: socketId });
+    });
+
+    this.pubSub.onMessage('chat_leave', (message: string) => {
+      const { chatId, socketId } = JSON.parse(message);
+      this.server
+        .to(`chat-${chatId}`)
+        .emit('user_leave', { chatId, id: socketId });
+    });
   }
 
   handleConnection(client: Socket, ...args: any[]) {}
   handleDisconnect(client: Socket, ...args: any[]) {}
 
-  @ApiOperation({ summary: 'Join a chat room' })
   @SubscribeMessage('join_room')
   async handleJoinRoom(
-    @MessageBody() joinRoomDto: JoinRoomDto,
+    @MessageBody() { chatId }: JoinRoomDto,
     @ConnectedSocket() socket: Socket,
   ): Promise<void> {
-    const { chatId } = joinRoomDto;
     socket.join(`chat-${chatId}`);
     await this.pubSub.publish(
       'chat_join',
@@ -52,12 +73,10 @@ export class SocketGatewayGateway
   }
 
   @SubscribeMessage('leave_room')
-  @ApiOperation({ summary: 'Leave a chat room' })
   async onConversationLeave(
-    @MessageBody() leaveRoomDto: LeaveRoomDto,
+    @MessageBody() { chatId }: LeaveRoomDto,
     @ConnectedSocket() socket: Socket,
   ) {
-    const { chatId } = leaveRoomDto;
     socket.leave(`chat-${chatId}`);
     await this.pubSub.publish(
       'chat_leave',
@@ -66,7 +85,6 @@ export class SocketGatewayGateway
   }
 
   @SubscribeMessage('start_typing')
-  @ApiOperation({ summary: 'Notify when a user starts typing' })
   async onTypingStart(
     @MessageBody()
     { chatId, name, userId }: { chatId: number; userId: number; name: string },
@@ -79,7 +97,6 @@ export class SocketGatewayGateway
   }
 
   @SubscribeMessage('end_typing')
-  @ApiOperation({ summary: 'Notify when a user stops typing' })
   async onTypingStop(
     @MessageBody()
     { chatId, name, userId }: { chatId: number; userId: number; name: string },
@@ -92,12 +109,11 @@ export class SocketGatewayGateway
   }
 
   @SubscribeMessage('user_message')
-  @ApiOperation({ summary: 'Send a user message' })
   async handleUserMessage(
-    @MessageBody() userMessageDto: UserMessageDto,
+    @MessageBody()
+    { chatId, content, userId, name }: UserMessageDto,
     @ConnectedSocket() socket: Socket,
   ): Promise<void> {
-    const { chatId, content, userId, name } = userMessageDto;
     await this.pubSub.publish(
       'chat_messages',
       JSON.stringify({ chatId, content, userId, name }),
@@ -111,7 +127,6 @@ export class SocketGatewayGateway
   }
 
   @SubscribeMessage('user_call')
-  @ApiOperation({ summary: 'Initiate a user call' })
   handleUserCall(
     @MessageBody() { offer, to }: { to: string; offer: any },
     @ConnectedSocket() socket: Socket,
@@ -120,7 +135,6 @@ export class SocketGatewayGateway
   }
 
   @SubscribeMessage('call_accepted')
-  @ApiOperation({ summary: 'Notify when a call is accepted' })
   handleAcceptedCall(
     @MessageBody() { ans, to }: { to: string; ans: any },
     @ConnectedSocket() socket: Socket,
@@ -129,7 +143,6 @@ export class SocketGatewayGateway
   }
 
   @SubscribeMessage('peer_nego_needed')
-  @ApiOperation({ summary: 'Notify when peer negotiation is needed' })
   handleNegoNeeded(
     @MessageBody() { offer, to }: { to: string; offer: any },
     @ConnectedSocket() socket: Socket,
@@ -138,7 +151,6 @@ export class SocketGatewayGateway
   }
 
   @SubscribeMessage('peer_nego_done')
-  @ApiOperation({ summary: 'Notify when peer negotiation is done' })
   handleNegoDone(
     @MessageBody() { ans, to }: { to: string; ans: any },
     @ConnectedSocket() socket: Socket,

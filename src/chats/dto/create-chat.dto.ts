@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -10,6 +11,10 @@ import {
 } from 'class-validator';
 
 export class CreateChatDto {
+  @ApiProperty({
+    example: [1, 2, 3],
+    description: 'The ids of users who wana form groups',
+  })
   @IsArray()
   @ArrayNotEmpty()
   @ArrayMinSize(1)
