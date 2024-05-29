@@ -20,7 +20,15 @@ export class MessagesService {
     private readonly entityManager: EntityManager,
   ) {}
   async create(createMessageDto: CreateMessageDto) {
-    await this.messageQueue.add(createMessageDto);
+    // implementing dead letter queue
+    await this.messageQueue.add(createMessageDto, {
+      attempts: 2,
+      backoff: {
+        type: 'fixed',
+        delay: 1000,
+      },
+      removeOnComplete: true,
+    });
   }
 
   findAll(query: FindAllMessageDto) {
