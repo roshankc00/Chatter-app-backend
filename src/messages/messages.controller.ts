@@ -6,11 +6,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { JWtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PaginataionDto } from 'src/common/dtos/pagination.dto';
+import { FindAllMessageDto } from './dto/findall.dto';
 
 @ApiTags('messages')
 @Controller('messages')
@@ -26,8 +29,8 @@ export class MessagesController {
   })
   @Get()
   @UseGuards(JWtAuthGuard)
-  findAll() {
-    return this.messagesService.findAll();
+  findAll(@Query() query: FindAllMessageDto) {
+    return this.messagesService.findAll(query);
   }
   @ApiOperation({
     summary: 'Get the single messsage woth id',

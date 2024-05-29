@@ -29,7 +29,7 @@ export class UsersController {
     description: 'It will return the  user details in an array ',
   })
   @Get()
-  @UseGuards(JWtAuthGuard)
+  // @UseGuards(JWtAuthGuard)
   findAll() {
     return this.usersService.findAll();
   }

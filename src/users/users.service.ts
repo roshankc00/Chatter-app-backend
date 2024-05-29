@@ -91,6 +91,7 @@ export class UsersService {
       if (!isPasswordCorrect) {
         throw new BadRequestException('Invalid creadentials');
       }
+      console.log(isPasswordCorrect);
 
       return {
         id: userexist.id,

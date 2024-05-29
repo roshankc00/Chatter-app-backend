@@ -5,6 +5,8 @@ import { User } from 'src/users/entities/user.entity';
 import { Message } from './entities/message.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+import { PaginataionDto } from 'src/common/dtos/pagination.dto';
+import { FindAllMessageDto } from './dto/findall.dto';
 
 @Injectable()
 export class MessagesService {
@@ -23,12 +25,8 @@ export class MessagesService {
     return this.entityManager.save(message);
   }
 
-  findAll() {
-    return this.messageRepository
-      .createQueryBuilder('message')
-      .leftJoinAndSelect('message.chatRoom', 'chatRoom')
-      .leftJoinAndSelect('message.user', 'user')
-      .getMany();
+  findAll(query: FindAllMessageDto) {
+    return this.filter(query);
   }
 
   findOne(id: number) {
@@ -49,5 +47,39 @@ export class MessagesService {
   async remove(id: number) {
     const messageExist = await this.messageRepository.find({ where: { id } });
     return this.entityManager.remove(messageExist);
+  }
+
+  async filter(query: FindAllMessageDto) {
+    const { page, pageSize, chatId } = query;
+    const totalItems = await this.messageRepository
+      .createQueryBuilder()
+      .getCount();
+    const totalPages = Math.ceil(totalItems / pageSize);
+    if (page && pageSize) {
+      const queryBuilder = this.messageRepository.createQueryBuilder('message');
+      const skip = (+page - 1) * +pageSize;
+      if (chatId) {
+        queryBuilder.andWhere('chatId = :chatId', {
+          chatId,
+        });
+      }
+      return {
+        messages: await queryBuilder
+          .leftJoinAndSelect('message.chatRoom', 'chatRoom')
+          .leftJoinAndSelect('message.user', 'user')
+          .where('chat.id = :chatId', { chatId })
+          .skip(+skip)
+          .take(+pageSize)
+          .getMany(),
+        totalPage: totalPages,
+        currentPage: +page,
+      };
+    } else {
+      return this.messageRepository
+        .createQueryBuilder('message')
+        .leftJoinAndSelect('message.chatRoom', 'chatRoom')
+        .leftJoinAndSelect('message.user', 'user')
+        .getMany();
+    }
   }
 }

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, UseGuards, Body } from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import { JWtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateChatDto } from './dto/create-chat.dto';
 
 @ApiTags('chats')
 @Controller('chats')
@@ -12,6 +13,11 @@ export class ChatsController {
   @UseGuards(JWtAuthGuard)
   getAllChats() {
     return this.chatsService.findAll();
+  }
+
+  @Post()
+  createChat(@Body() data: CreateChatDto) {
+    return this.chatsService.create(data);
   }
 
   @ApiOperation({
