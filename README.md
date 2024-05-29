@@ -8,6 +8,8 @@
 
 - Redis(pubsub)
 
+- Queue
+
 - typescript
 
 - React(Just to fell the backend with no intension of making ui attractive)
