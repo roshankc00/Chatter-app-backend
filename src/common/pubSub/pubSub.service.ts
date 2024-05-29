@@ -1,7 +1,7 @@
 // redis-pubsub.service.ts
 import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-
+import 'dotenv/config';
 @Injectable()
 export class RedisPubSubService {
   private readonly publisher: Redis;
@@ -9,12 +9,12 @@ export class RedisPubSubService {
 
   constructor() {
     this.publisher = new Redis({
-      host: 'localhost',
-      port: 6379,
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
     });
     this.subscriber = new Redis({
-      host: 'localhost',
-      port: 6379,
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
     });
 
     this.subscriber.subscribe('chat_messages');
