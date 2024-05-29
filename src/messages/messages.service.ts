@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -7,22 +7,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { PaginataionDto } from 'src/common/dtos/pagination.dto';
 import { FindAllMessageDto } from './dto/findall.dto';
+import { Queue } from 'bull';
+import { MEASSAGE_QUEUE } from 'src/processors/constant';
+import { InjectQueue } from '@nestjs/bull';
 
 @Injectable()
 export class MessagesService {
   constructor(
+    @InjectQueue(MEASSAGE_QUEUE) private readonly messageQueue: Queue,
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
     private readonly entityManager: EntityManager,
   ) {}
-  create(createMessageDto: CreateMessageDto) {
-    const { chatId, content, userId } = createMessageDto;
-    const message = new Message({
-      chatId,
-      content,
-      userId,
-    });
-    return this.entityManager.save(message);
+  async create(createMessageDto: CreateMessageDto) {
+    await this.messageQueue.add(createMessageDto);
   }
 
   findAll(query: FindAllMessageDto) {

@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Post,
 } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -14,11 +15,17 @@ import { JWtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaginataionDto } from 'src/common/dtos/pagination.dto';
 import { FindAllMessageDto } from './dto/findall.dto';
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @ApiTags('messages')
 @Controller('messages')
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
+
+  @Post()
+  postme(@Body() data: CreateMessageDto) {
+    return this.messagesService.create(data);
+  }
 
   @ApiOperation({
     summary: 'Gell all the messages',
